@@ -109,6 +109,8 @@ module.exports = function (eleventyConfig) {
   });
 
   eleventyConfig.addPassthroughCopy({"SITE_README.md": "README.md"});
+  eleventyConfig.addPassthroughCopy(".nojekyll");
+  eleventyConfig.addPassthroughCopy("CNAME");
 
   return {
     // Control which files Eleventy will process
