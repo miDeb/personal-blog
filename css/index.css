@@ -1,4 +1,10 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap");
+@font-face {
+  font-family: "Roboto Slab";
+  font-display: swap;
+  src: url("/fonts/Roboto_Slab/RobotoSlab-VariableFont_wght.ttf") format("truetype");
+}
+
+
 /* Colors */
 :root {
   --lightgray: #e0e0e0;

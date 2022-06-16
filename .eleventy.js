@@ -109,6 +109,7 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy({"SITE_README.md": "README.md"});
   eleventyConfig.addPassthroughCopy(".nojekyll");
   eleventyConfig.addPassthroughCopy("CNAME");
+  eleventyConfig.addPassthroughCopy("fonts");
 
   return {
     // Control which files Eleventy will process
