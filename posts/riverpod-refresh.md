@@ -1,5 +1,5 @@
 ---
-title: Refresh All FutureProvider.family or Multiple Providers
+title: Refresh FutureProvider.family or Multiple Providers
 description: "TLDR: Watch a common provider so that when it refreshes, all providers refresh."
 date: 2022-06-16
 tags:
