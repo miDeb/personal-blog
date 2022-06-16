@@ -44,8 +44,7 @@ final itemProvider =  FutureProvider.family<List<Item>, int>(
 
 ```
 
-You can add more features to this provider, like refresh functionality or debouncing.
-I'll write a short blog post about this later.
+You can add more features to this provider, like [refresh functionality](/posts/riverpod-refresh) or [debouncing](/posts/riverpod-debounce).
 
 
 ## Using `ListView.custom`

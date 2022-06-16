@@ -290,21 +290,13 @@ a[href].post-tag:visited {
 
 /* Direct Links / Markdown Headers */
 .direct-link {
-  font-family: sans-serif;
   text-decoration: none;
-  font-style: normal;
-  margin-left: 0.1em;
 }
-a[href].direct-link,
-a[href].direct-link:visited {
-  color: transparent;
-}
-a[href].direct-link:focus,
-table {
-  border-collapse: collapse;
-  width: 100%;
-  margin-top: 2em;
-  margin-bottom: 4em;
+
+a.direct-link:hover::after {
+  content: "#";
+  color: grey;
+  margin-left: 4px;
 }
 
 table td {

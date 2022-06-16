@@ -70,10 +70,8 @@ module.exports = function (eleventyConfig) {
   let markdownLibrary = markdownIt({
     html: true,
   }).use(markdownItAnchor, {
-    permalink: markdownItAnchor.permalink.ariaHidden({
-      placement: "after",
+    permalink: markdownItAnchor.permalink.headerLink({
       class: "direct-link",
-      symbol: "#",
       level: [1, 2, 3, 4],
     }),
     slugify: eleventyConfig.getFilter("slug"),

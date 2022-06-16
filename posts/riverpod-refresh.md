@@ -1,6 +1,6 @@
 ---
-title: Reload all FutureProvider.family or multiple providers
-description: "TLDR: Watch a common provider so that when it refreshes, all refresh."
+title: Refresh All FutureProvider.family or Multiple Providers
+description: "TLDR: Watch a common provider so that when it refreshes, all providers refresh."
 date: 2022-06-16
 tags:
   - Flutter
