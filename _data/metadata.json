@@ -1,21 +1,21 @@
 {
   "title": "Michael Debertol",
-  "url": "https://debertol.com/",
+  "url": "https://blog.debertol.com/",
   "language": "en",
   "description": "Blog about Flutter and other stuff",
   "feed": {
     "subtitle": "Blog about Flutter and other stuff",
     "filename": "feed.xml",
     "path": "/feed/feed.xml",
-    "id": "https://debertol.com/"
+    "id": "https://blog.debertol.com/"
   },
   "jsonfeed": {
     "path": "/feed/feed.json",
-    "url": "https://debertol.com/feed/feed.json"
+    "url": "https://blog.debertol.com/feed/feed.json"
   },
   "author": {
     "name": "Michael Debertol",
     "email": "michael.debertol@gmail.com",
-    "url": "https://debertol.com/about/"
+    "url": "https://blog.debertol.com/about/"
   }
 }

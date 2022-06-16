@@ -12,22 +12,23 @@ for the sake of this blog post we'll try to implement it ourselves, using only b
 
 I'll be using `riverpod` for managing the state, but it should be possible to use something else as well.
 
-## What's the benefit of implementing something yourself if there's already a package out there?
+## Why Reimplement Something if There’s Already a Package?
 
 Sometimes it's just easier.
-In my case the package mentioned above would have required changes so that it would work for my usecase,
+In my case the package mentioned above would have required changes to make it work for my usecase,
 meaning that I would have had to fork it possibly mantain that fork in the future.
 
 Also, I was looking for something a bit simpler. If I implement something for myself,
-I can focus on the feature I need; a package has to cover many different usecases and will therefore be more complex to use.
+I can focus on the feature I need; a package has to cover many different usecases and
+will therefore be more complex to use.
 
-## What features do we need?
+## What Features Do We Need?
 
 In this post we'll only explore very basic options:
 - The list should load new items as they become visible
 - While loading some kind of animation should be shown. We'll be using the [shimmer](https://pub.dev/packages/shimmer) package for this.
 
-## How to manage state?
+## How To Manage State?
 
 As already mentioned, we're using `riverpod`, so our data will come from a `Provider`.
 It's very convenient to use `FutureProvider.family` for our usecase.
@@ -47,7 +48,7 @@ You can add more features to this provider, like refresh functionality or deboun
 I'll write a short blog post about this later.
 
 
-## Using ListView.custom
+## Using `ListView.custom`
 
 Since we want to display a List of items, we'll probably want to look at [`ListView`](https://api.flutter.dev/flutter/widgets/ListView-class.html). Since we don't know all items
 beforehand, let's take a closer look at [`ListView.builder`](https://api.flutter.dev/flutter/widgets/ListView/ListView.builder.html). Reading through its documentation we'll soon
@@ -99,7 +100,7 @@ return page.map(
 `LoadingTile` will show a shimmer effect while the data is loading. Error handling should look a bit different in a real app,
 possibly offering a `retry` button and showing the error in a more user-friendly way.
 
-## Full example
+## Full Example
 
 That's already it! I left out some details above that are not relevant for what I wanted to show, but for the sake of completeness I'll provide
 a full example below:
