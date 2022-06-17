@@ -36,9 +36,8 @@ It's very convenient to use `FutureProvider.family` for our usecase.
 Let's take a look at our provider:
 ```dart
 final itemProvider =  FutureProvider.family<List<Item>, int>(
-  (ref, page) async {
-    final items = await fetchItems(page);
-    return items;
+  (ref, page) {
+    return fetchItems(page);
   },
 );
 
@@ -108,9 +107,9 @@ possibly offering a `retry` button and showing the error in a more user-friendly
 ## Full Example
 
 That's already it! I left out some details above that are not relevant for what I wanted to show, but for the sake of completeness I'll provide
-a full example below:
+a full example below (I've highlighted the most important parts):
 
-```dart
+```dart/24-28,80-105
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
@@ -136,9 +135,8 @@ Future<List<Item>> fetchItems(int page) async {
 }
 
 final itemProvider = FutureProvider.family<List<Item>, int>(
-  (ref, page) async {
-    final items = await fetchItems(page);
-    return items;
+  (ref, page) {
+    return fetchItems(page);
   },
 );
 

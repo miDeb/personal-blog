@@ -33,7 +33,7 @@ final refreshProvider = ChangeNotifierProvider<RefreshNotifier>(
 ```
 
 Other providers can watch it, for example:
-```dart
+```dart/2
 final itemProvider = FutureProvider.family<List<Item>, int>(
   (ref, page) async {
     ref.watch(refreshProvider);
