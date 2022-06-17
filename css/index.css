@@ -348,6 +348,13 @@ p > code, a > code {
   color: var(--white);
 }
 
+.next-post > a > .icon {
+  padding-left: 5px;
+}
+.prev-post > a > .icon {
+  padding-right: 5px;
+}
+
 .post-footer > div > a:hover {
   color: var(--white);
 }
@@ -447,4 +454,19 @@ footer {
   -z-animation: rainbow 16s ease infinite;
   -o-animation: rainbow 16s ease infinite;
   animation: rainbow 16s ease infinite;
+}
+
+.icon {
+  display: inline-flex;
+  align-self: center;
+}
+
+.icon svg {
+  height: 1em;
+  width: 1em;
+}
+
+.icon.baseline svg {
+  top: .125em;
+  position: relative;
 }
