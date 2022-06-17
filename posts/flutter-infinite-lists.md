@@ -85,7 +85,13 @@ Let's handle all those different cases:
 ```dart
 return page.map(
   loading: (_) => LoadingTile(),
-  error: (error) => Text('Error: $error'),
+  error: (error) {
+    if (itemIndex == 0) {
+      return Text('Error: $error');
+    } else {
+      return null;
+    }
+  },
   data: (data) {
     final items = data.value;
     if (items.length <= itemIndex) {
@@ -194,7 +200,13 @@ class HomePage extends ConsumerWidget {
             final page = ref.watch(itemProvider(pageIndex));
             return page.map(
               loading: (_) => const LoadingTile(),
-              error: (error) => Text('Error: $error'),
+              error: (error) {
+                if (itemIndex == 0) {
+                  return Text('Error: $error');
+                } else {
+                  return null;
+                }
+              },
               data: (data) {
                 final items = data.value;
                 if (items.length <= itemIndex) {
