@@ -132,6 +132,12 @@ pre {
   border-radius: 5px;
 }
 
+/* Expand the highlight marker to the whole width */
+pre > code {
+  display: inline flow-root;
+  min-width: 100%;
+}
+
 blockquote {
   border-left: solid var(--yellowgreen) 0.2em;
   border-right: solid var(--yellowgreen) 0.2em;
