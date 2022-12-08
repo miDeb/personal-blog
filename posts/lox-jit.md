@@ -13,19 +13,19 @@ layout: layouts/post.njk
 A bytecode VM works by first compiling a program to bytecode and then executing that bytecode.
 The compiler breaks the program down into an array of opcodes that each represent a basic operation. These opcodes
 are only a single byte in size, which is why this representation is also called "bytecode". Some opcodes also carry additional
-information, like the opcode to load a constant, which is always followed by an additional byte that stores the index of that constant.
+information, like the opcode to load a constant which is always followed by an additional byte that stores the index of that constant.
 
 Bytecode is then executed by the virtual machine (VM), which walks through the individual instructions and performs the associated
 operation. The core of the VM is essentially one big `match` statement (Rust's version of a `switch` statement) in a loop.
 
 
 ## From Compiling Bytecode to Compiling Machine Code
-A bytecode VM is conceptually very similar to an actual CPU. A CPU also executes a list of instructions one after the other <span class="gray">(well, actually,
+A bytecode VM is conceptually very similar to an actual CPU, which also executes a list of instructions one after the other <span class="gray">(well, actually,
 for optimization purposes CPUs don't execute instructions strictly in order, but we won't get into that)</span>. CPUs obviously don't understand the bytecode we defined
 for our little language, the're made for an architecture specific machine code. Real compilers have different backends to support multiple architectures
-<span class="gray">(such as x64, ARM or RISC-V)</span>, but we will focus on only one of them, x64 <span class="gray">(because that's what my computer is running on right now)</span>. We can expect
-the CPU to execute machine code faster than the VM can execute bytecode. This is because the CPU is now directly executing compiled lox code, instead
-of executing an interpreter that in turn executes lox code. CPUs are also really well optimized, and we can now directly benefit from those optimizations.
+<span class="gray">(such as x64, ARM or RISC-V)</span>, but `loxjit` supports on only one of them, x64 <span class="gray">(because that's what my computer is running on right now)</span>.
+We can expect a performance improvement if the CPU is directly executing compiled lox code, instead of executing an interpreter that in turn executes lox code.
+CPUs are really well optimized, which we benefit from.
 
 "Crafting Interpreters" already provides us with a bytecode virtual machine (`clox`) that we can use as a starting point to compile to machine code.
 There is already a compiler that emits bytecode. We'll just have to modify it to emit machine code instead! I didn't want to write my own assembler,
@@ -40,19 +40,21 @@ tool to help with that. And just like that, `loxjit` was born.
 Some things however are different with assembly than with bytecode: While the VM knows of its current call frame and has its own stack of values, our implementation
 has to use the native stack. The native stack is also used for other things, like storing the return address of functions <span class="gray">(this is mandated by the x64 architecture itself -
 the `call` instruction pushes the current instruction pointer to the stack and the `ret` instruction restores it)</span>. We also use the stack to store
-the pointer to the function we're in, and the pointer to the base of the current call frame, when calling a function. When the function returns, they will again be restored.
+the pointer to the function we're in <span class="gray">(this is needed to resolve upvalues in closures)</span> and the pointer to the base of the current call frame, while calling a function.
+When the function later returns, they will again be restored to registers.
 Something to keep in mind is that the native stack grows downwards instead of upwards, which means that pushing something to the stack <span class="gray">(using the `push` instruction)</span> will decrement
 the pointer to the last value on the stack <span class="gray">(this pointer is called the "stack pointer" and is stored in its own register)</span>.
 
 ### VM Calls
 I did not implement everything in assembly. Some things, like the garbage collector or the code to print a value to the console, are still written in the host language (Rust).
-Rust functions can be called from the assembly if we assign them a specific calling convention <span class="gray">(Rust does not have a stable ABI, so we have to use something foreign)</span>. I chose to use
+Rust functions can be called from assembly if we assign them a specific calling convention <span class="gray">(Rust does not have a stable ABI, so we have to use something foreign)</span>. I chose to use
 the `win64` calling convention, because that one seems to be supported on most platforms. Depending on the calling convention certain registers are volatile or non-volatile
 <span class="gray">(volatile registers can be overwritten by a called function)</span>
-and different registers are used to pass arguments and return values. Something I didn't initially know was that the stack also had to be aligned by 16 bytes before calling.
+and different registers are used to pass arguments and return values.
+Something I didn't initially know was that the stack also had to be aligned by 16 bytes before calling.
 
 ### Constants
-`clox` has a constant table where all the constants are stored. `loxjit` compiles all constants into the machine code. This means the number of constants is now essentially unlimited.
+`clox` has a constant table where all the constants are stored. `loxjit` compiles all constants into the machine code, which means the number of constants is now essentially unlimited.
 
 ### Garbage Collection
 Garbage collection isn't actually that different. Instead of walking the custom stack the GC has to go through the native stack, which is exactly the same.
@@ -61,7 +63,7 @@ and ignore them for garbage collection.
 
 ## Optimizations
 
-Compiling to native code already is a performance improvement, but there's some more things I did:
+Compiling to native code already is a performance improvement in itself, but there's some more things I did:
 
 ### Accessing Globals Without Hash Lookups
 
@@ -84,13 +86,15 @@ caches the hash in the string object itself.</span>
 So far we have only talked about compiling some code and then running it. But what if we change the code while running it,
 to make it faster? This is where Inline Caches (ICs) come into play. They use the fact that while it is theoretically possible to
 pass totally random objects around in a dynamic programming language, this rarely happens. Instead, in most cases, a certain place
-in the code will always see the same kind of object repeatedly. This allows us to change code from always going _"We need property 'foo' of
+in the code will always see the same kind of object repeatedly.
+
+This allows us to change code from always going _"We need property 'foo' of
 this object -> look it up in the HashMap -> found!"_ to going _"Is it the same kind of object as before -> if so, the property we're looking
 for must be at the same index as before -> found!"_.
 
 You might have noticed the main difference: Instead of performing a hash lookup we only perform a lookup by index.
-Another thing that might have caught your eye is the part where the new code checks for the "kind of object" it is. This is called the "shape" of an object (an alternative
-name would be "hidden class"). The shape of an object describes how it is laid out, i.e. at what index a property with a certain name can be found. The object itself only
+Another thing that might have caught your eye is the part where the new code checks for the "kind of object" it is. This is called the "shape" of an object <span class="gray">(an alternative
+name would be "hidden class")</span>. The shape of an object describes how it is laid out, i.e. at what index a property with a certain name can be found. The object itself only
 contains an array of properties that we can index into.
 
 To make this work we need to make sure that objects that look the same also have the same `shape` assigned to them. This is achieved using a
@@ -126,8 +130,10 @@ ic_end:
 The inline cache is part of the compiled output from the very beginning, but only after a `property_get` has succeeded on the slow path it will be enabled.
 As you can see, initially the cached shape pointer is set to `0`. This makes sure that the Inline Cache is ignored before it is enabled, because `0` can
 never be a valid pointer to a shape.
+
 To enable it, we set the shape pointer and the property index <span class="gray">(I've highlighted the relevant lines)</span>. Now, if the same property access is
-run again with a receiver of the same shape, it will hit the inline cache and be much faster than the first time.
+run again with a receiver of the same shape, it will hit the inline cache and be much faster than the first time. You can now also see why it is called an _inline_ cache:
+All the information (shape pointer and property index) is stored in the code itself, not in an external data structure.
 
 ## Performance Evaluation
 
@@ -156,7 +162,7 @@ Produces these results:
 
 The performance improvement we see here is the result of compiling to machine code, which is most noticeable
 in code like this that does a lot simple numeric operations and function calls. Unsurprisingly, enabling inline caches has
-no effect here because ICs are only used for property access and method calls, which this code has exactly zero.
+no effect here because ICs are only used for property access and method calls, of which this code has exactly zero.
 
 ### Property Accesses and Method Calls
 

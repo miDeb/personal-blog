@@ -337,6 +337,10 @@ span.gray {
   color: rgb(143, 143, 143);
 }
 
+img {
+  max-width: 100%;
+}
+
 .post-footer {
   display: flex;
   justify-content: space-between;
