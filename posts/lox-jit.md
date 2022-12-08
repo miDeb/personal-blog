@@ -207,3 +207,5 @@ It is also a great starting point if you want to do some exploration on your own
 
 If you notice something wrong in this post or if you have other comments please feel free to [open an issue](https://github.com/miDeb/personal-blog/issues)
 or reach out via email (can be found [here](https://github.com/miDeb)).
+
+The source code for `loxjit` can be found [here](https://github.com/miDeb/loxjit).
