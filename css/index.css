@@ -332,6 +332,11 @@ p > code, a > code {
   border-radius: 5px;
   padding: 0 5px;
 }
+
+span.gray {
+  color: rgb(143, 143, 143);
+}
+
 .post-footer {
   display: flex;
   justify-content: space-between;
