@@ -22,16 +22,16 @@ operation. The core of the VM is essentially one big `match` statement (Rust's v
 ## From Compiling Bytecode to Compiling Machine Code
 A bytecode VM is conceptually very similar to an actual CPU, which also executes a list of instructions one after the other <span class="gray">(well, actually,
 for optimization purposes CPUs don't execute instructions strictly in order, but we won't get into that)</span>. CPUs obviously don't understand the bytecode we defined
-for our little language, the're made for an architecture specific machine code. Real compilers have different backends to support multiple architectures
+for our little language, they're made for an architecture-specific machine code. Real compilers have different backends to support multiple architectures
 <span class="gray">(such as x64, ARM or RISC-V)</span>, but `loxjit` supports on only one of them, x64 <span class="gray">(because that's what my computer is running on right now)</span>.
 We can expect a performance improvement if the CPU is directly executing compiled lox code, instead of executing an interpreter that in turn executes lox code.
 CPUs are really well optimized, which we benefit from.
 
 "Crafting Interpreters" already provides us with a bytecode virtual machine (`clox`) that we can use as a starting point to compile to machine code.
-There is already a compiler that emits bytecode. We'll just have to modify it to emit machine code instead! I didn't want to write my own assembler,
-so I used `dynasm-rs` to translate assembly to actual machine code. With that out of the way, we'll have to modify the compiler just so that it emits
+There is already a compiler that emits bytecode, which we'll just have to modify it to emit machine code instead! I didn't want to write my own assembler,
+so I used `dynasm-rs` to translate assembly to actual machine code. With that out of the way, we'll just have to modify the compiler so that it emits
 assembly code. To do that, I chose the easy path and more or less translated what the interpreter was doing to assembly code. [Compiler Explorer](https://godbolt.org) is a great
-tool to help with that. And just like that, `loxjit` was born.
+tool to help with that.
 
 ## Differences
 
